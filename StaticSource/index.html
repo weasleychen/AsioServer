@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: #2d3436;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .profile-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px; /* 添加一些内边距 */
+        }
+
+        .profile-image img {
+            max-width: 100%;
+            border-radius: 50%; /* 圆形图像 */
+            height: auto; /* 自适应高度 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            flex: 2;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #636e72;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: #74b9ff;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            position: relative; /* 为悬停效果定位 */
+        }
+
+        .social-links a:hover {
+            background-color: #0984e3;
+        }
+
+        /* 悬停显示电话号码 */
+        .social-links a:hover::after {
+            content: "13600144986";
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #2d3436;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .profile-image {
+                height: 300px;
+            }
+        }
+
+        .rainbow-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg,
+            #FF0000,
+            #FF7F00,
+            #FFFF00,
+            #00FF00,
+            #0000FF,
+            #8B00FF);
+            -webkit-background-clip: text; /* 适用于Webkit内核浏览器 */
+            color: transparent; /* 使文字透明，以显示背景 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="profile-image">
+        <img src="http://oikawa.fun/Pic?name=gay" alt="Profile Photo">
+    </div>
+    <div class="content">
+        <h1>你好，我叫钟杰亨/Hello, I'm Hengo</h1>
+        <h2>A famous gay from China</h2>
+        <p>
+            Welcome to my personal blog website, if you have some interest on me, please contact me
+        </p>
+        <p>
+            There are many kinds of package of me, choose one of them or bring what you want to contact me!
+        </p>
+        <p>
+            <h3 class="rainbow-text">
+                $128 for whole night
+            </h3>
+            &nbsp; &nbsp; &nbsp; &nbsp; Which contains blow and so on.
+        </p>
+        <p>
+            <h3 class="rainbow-text">
+                $168 for whole night
+            </h3>
+            &nbsp; &nbsp; &nbsp; &nbsp; The difference between it and the first one is I can speak any language that night. You know, I have a good command of every language, because I study in 'School of Foreign Studies'.
+        </p>
+        <p>
+            <h3 class="rainbow-text">
+                $Negotiable price <br>
+            </h3>
+            &nbsp; &nbsp; &nbsp; &nbsp; Bring your demand to contact me ASAP!
+        </p>
+        <div class="social-links">
+            <a href="#" title="Phone"><i class="fas fa-phone-alt"></i></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
