@@ -1,7 +1,7 @@
 #include "Download.h"
 
-Download::Download(boost::asio::ip::tcp::socket *socket, const HttpMessage &msg)
-    : BaseCgi(socket, msg) {}
+Download::Download(boost::asio::ip::tcp::socket *socket, HttpMessage &&msg)
+    : BaseCgi(socket, std::move(msg)) {}
 
 int Download::Execute() {
     int ret = 0;

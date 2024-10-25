@@ -3,8 +3,8 @@
 #include "Cgi/Pic.h"
 #include "Cgi/HttpHeaderHelper.h"
 
-Pic::Pic(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg)
-    : BaseCgi(argSocket, argMsg) {}
+Pic::Pic(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg)
+    : BaseCgi(argSocket, std::move(argMsg)) {}
 
 int Pic::Execute() {
     int ret = 0;

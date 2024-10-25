@@ -5,7 +5,7 @@
 
 class Echo: public BaseCgi {
 public:
-    Echo(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg);
+    Echo(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg);
 
     int Execute() override;
 };

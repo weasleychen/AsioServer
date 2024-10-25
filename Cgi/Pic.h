@@ -5,7 +5,7 @@
 
 class Pic: public BaseCgi {
 public:
-    Pic(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg);
+    Pic(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg);
 
     int Execute() override;
 };

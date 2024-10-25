@@ -5,7 +5,7 @@
 
 class Home: public BaseCgi {
 public:
-    Home(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg);
+    Home(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg);
 
     int Execute() override;
 };

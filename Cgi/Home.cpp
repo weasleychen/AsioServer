@@ -2,8 +2,8 @@
 
 #include "Utility/Comm.h"
 
-Home::Home(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg)
-    : BaseCgi(argSocket, argMsg) {}
+Home::Home(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg)
+    : BaseCgi(argSocket, std::move(argMsg)) {}
 
 int Home::Execute() {
     int ret = 0;

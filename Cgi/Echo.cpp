@@ -2,8 +2,8 @@
 
 #include <format>
 
-Echo::Echo(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg)
-    : BaseCgi(argSocket, argMsg) {}
+Echo::Echo(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg)
+    : BaseCgi(argSocket, std::move(argMsg)) {}
 
 int Echo::Execute() {
     int ret = 0;

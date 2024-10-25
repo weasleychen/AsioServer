@@ -3,8 +3,8 @@
 
 #include "Cgi/BaseCgi.h"
 
-BaseCgi::BaseCgi(boost::asio::ip::tcp::socket *argSocket, const HttpMessage &argMsg)
-    : socket(argSocket), msg(argMsg) {}
+BaseCgi::BaseCgi(boost::asio::ip::tcp::socket *argSocket, HttpMessage &&argMsg)
+    : socket(argSocket), msg(std::move(argMsg)) {}
 
 std::size_t BaseCgi::WriteResponse(const std::string &body, std::map<std::string, std::string> headers) {
     static std::map<std::string, std::string> defaultHeaders = {

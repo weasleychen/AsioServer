@@ -7,6 +7,7 @@
 #include <shared_mutex>
 #include <mutex>
 #include <numeric>
+#include <cassert>
 
 #include "Utility/Comm.h"
 #include "BaseFrame/HttpHelper.h"
@@ -23,6 +24,21 @@ struct HttpMessage {
 
     // body
     std::string body;
+
+    HttpMessage() = default;
+    HttpMessage(HttpMessage &&msg) {
+        *this = std::move(msg);
+    }
+
+    HttpMessage& operator=(HttpMessage &&msg) {
+        httpMethod = std::move(msg.httpMethod);
+        requestPath = std::move(msg.requestPath);
+        httpVersion = std::move(msg.httpVersion);
+        queryString = std::move(msg.queryString);
+        headers = std::move(msg.headers);
+        body = std::move(msg.body);
+        return *this;
+    }
 
     [[nodiscard]] std::optional<std::string> GetHeader(const std::string &key) const {
         if(queryString.count(key)) {
@@ -72,7 +88,7 @@ private:
 template <typename T>
 class HttpParser {
 public:
-    using CallBack_t = std::function<void(T, const HttpMessage &)>;
+    using CallBack_t = std::function<void(T, HttpMessage &)>;
 
     explicit HttpParser(CallBack_t cb)
         : callBack(std::move(cb)) {}

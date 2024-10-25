@@ -4,12 +4,13 @@
 #include "BaseFrame/Log.h"
 
 #include <map>
+#include <utility>
 
 template <typename Cgi>
-int ExecuteCgi(boost::asio::ip::tcp::socket *socket, const HttpMessage &msg) {
+int ExecuteCgi(boost::asio::ip::tcp::socket *socket, HttpMessage &msg) {
     int ret = 0;
 
-    Cgi cgi(socket, msg);
+    Cgi cgi(socket, std::move(msg));
 
     ret = cgi.Execute();
     if(ret != 0) {
@@ -21,23 +22,23 @@ int ExecuteCgi(boost::asio::ip::tcp::socket *socket, const HttpMessage &msg) {
 }
 
 // transfer to cgi
-void HandleHttp(boost::asio::ip::tcp::socket *socket, const HttpMessage &msg) {
+void HandleHttp(boost::asio::ip::tcp::socket *socket, HttpMessage &msg) {
     int ret = 0;
 
-    #define WrapCgiFunction(CgiName) [&](){ ExecuteCgi<CgiName>(socket, msg); }
-    std::map<std::string, std::function<void()>> mp = {
-        {"/", WrapCgiFunction(Home)},
-        {"/Echo", WrapCgiFunction(Echo)},
-        {"/Pic", WrapCgiFunction(Pic)},
-        {"/Download", WrapCgiFunction(Download)},
+    using ExectutorType = std::function<int(boost::asio::ip::tcp::socket *socket, HttpMessage &msg)>;
+    static const std::map<std::string, ExectutorType> toExecutor = {
+        {"/", ExecuteCgi<Home>},
+        {"/Echo", ExecuteCgi<Echo>},
+        {"/Pic", ExecuteCgi<Pic>},
+        {"/Download", ExecuteCgi<Download>},
     };
 
-    if(!mp.contains(msg.requestPath)) {
+    if(!toExecutor.contains(msg.requestPath)) {
         WERROR("Unexpected path: {}", msg.requestPath);
         return;
     }
 
-    mp.at(msg.requestPath)();
+    toExecutor.at(msg.requestPath)(socket, msg);
 }
 
 int main(int argc, char **argv) {

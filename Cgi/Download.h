@@ -5,7 +5,7 @@
 
 class Download: public BaseCgi {
 public:
-    Download(boost::asio::ip::tcp::socket *socket, const HttpMessage &msg);
+    Download(boost::asio::ip::tcp::socket *socket, HttpMessage &&msg);
 
     int Execute() override;
 };

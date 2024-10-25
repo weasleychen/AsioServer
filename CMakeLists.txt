@@ -6,21 +6,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(./)
 
-include(FetchContent)
-FetchContent_Declare(Boost SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rd/boost)
-FetchContent_MakeAvailable(Boost)
-
-execute_process(
-        COMMAND find "${CMAKE_SOURCE_DIR}/3rd/boost/libs" -type d -name include
-        OUTPUT_VARIABLE BoostHeaders
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-string(REGEX REPLACE "\n" ";" BoostHeaders "${BoostHeaders}")
-
-foreach(dir ${BoostHeaders})
-    message(STATUS "Found include directory: ${dir}")
-    include_directories(${dir})
-endforeach()
+find_package(Boost REQUIRED COMPONENTS filesystem)
+include_directories(${Boost_INCLUDE_DIR})
 
 file(GLOB UtilitySourceFile "Utility/*.cpp")
 add_library(Utility STATIC ${UtilitySourceFile})
@@ -31,7 +18,7 @@ target_link_libraries(BaseFrame Utility)
 
 file(GLOB CgiSourceFile "Cgi/*.cpp")
 add_library(Cgi STATIC ${CgiSourceFile})
-target_link_libraries(Cgi Boost::filesystem Utility)
+target_link_libraries(Cgi Utility Boost::filesystem)
 
 add_executable(main main.cpp)
 target_link_libraries(main BaseFrame Cgi)
