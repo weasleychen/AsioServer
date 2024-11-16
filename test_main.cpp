@@ -1,7 +1,8 @@
+#include "BaseFrame/Log.h"
 #include <fstream>
 #include <iostream>
 
-int main() {
-    
+int main() {    
+    WERROR("HelloWorld");
     return 0;
 }

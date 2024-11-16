@@ -2,18 +2,66 @@
 
 #include <iostream>
 #include <format>
+#include <chrono>
+#include <ctime>
 
-int GetCurrentYear();
-int GetCurrentMonth();
-int GetCurrentDay();
-int GetCurrentHour();
-int GetCurrentMinute();
-int GetCurrentSecond();
-int GetCurrentMillisecond();
+inline int GetCurrentYear() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm t{};
+    localtime_r(&time, &t);
+    return t.tm_year + 1900;
+}
 
-template <class T>
-requires std::same_as<T, const char *>
-static constexpr T SplitFileName(T fileName) {
+inline int GetCurrentMonth() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm t{};
+    localtime_r(&time, &t);
+    return t.tm_mon + 1;
+}
+
+inline int GetCurrentDay() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm t{};
+    localtime_r(&time, &t);
+    return t.tm_mday;
+}
+
+inline int GetCurrentHour() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm t{};
+    localtime_r(&time, &t);
+    return t.tm_hour;
+}
+
+inline int GetCurrentMinute() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm t{};
+    localtime_r(&time, &t);
+    return t.tm_min;
+}
+
+inline int GetCurrentSecond() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm t{};
+    localtime_r(&time, &t);
+    return t.tm_sec;
+}
+
+inline int GetCurrentMillisecond() {
+    auto now = std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration) % 1000;
+    return static_cast<int>(milliseconds.count());
+}
+
+
+inline constexpr const char* SplitFileName(const char *fileName) {
     std::size_t length = 0;
     while(fileName[length] != '\0') {
         ++length;
@@ -50,11 +98,11 @@ static constexpr T SplitFileName(T fileName) {
 #define COLOR(__text, __color) __color __text COLOR_RESET
 #define BTCOLOR(__text, __background_color, __text_color) __background_color __text_color __text COLOR_RESET
 
-#define LOG_ERROR_IMPL(__fmt, ...)                  \
-do {                                                \
-    std::cout << std::format(__fmt, ##__VA_ARGS__); \
-    std::cout.flush();                              \
-} while(false)
+template <typename... Args>
+__attribute__((always_inline)) void LogErrorImpl(std::format_string<Args...> fmt, Args&&... args) {
+    std::cout << std::format(std::move(fmt), std::forward<Args>(args)...);
+    std::cout.flush(); 
+}
 
 #define WHERE_LOG_HOLDER "[{}:{}:{}]"
 #define WHERE_LOG_VALUE SplitFileName(__FILE__), __func__, __LINE__
@@ -62,7 +110,13 @@ do {                                                \
 #define WHEN_LOG_HOLDER "{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"
 #define WHEN_LOG_VALUE GetCurrentYear(), GetCurrentMonth(), GetCurrentDay(), GetCurrentHour(), GetCurrentMinute(), GetCurrentSecond(), GetCurrentMillisecond()
 
-#define LOG_ERROR(__log_type, __fmt, ...) LOG_ERROR_IMPL(__log_type " " WHEN_LOG_HOLDER " " WHERE_LOG_HOLDER " " __fmt "\n", WHEN_LOG_VALUE, WHERE_LOG_VALUE, ##__VA_ARGS__)
+#define LOG_ERROR(__log_type, __fmt, ...) \
+do { \
+    LogErrorImpl(__log_type " "); \
+    LogErrorImpl(WHEN_LOG_HOLDER " ", WHEN_LOG_VALUE); \
+    LogErrorImpl(WHERE_LOG_HOLDER " ", WHERE_LOG_VALUE); \
+    LogErrorImpl(__fmt "\n", ##__VA_ARGS__); \
+} while(false)
 
 #define RERROR(__fmt, ...) LOG_ERROR(COLOR("BaseFrame", YELLOW), __fmt, ##__VA_ARGS__)
 #define WERROR(__fmt, ...) LOG_ERROR(COLOR("Biz", CYAN), __fmt, ##__VA_ARGS__)

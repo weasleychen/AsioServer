@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            max-height: 400px;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e6f7ff;
+            border-radius: 5px;
+            max-width: 75%;
+        }
+
+        .message.user {
+            background-color: #d4edda;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .input-container input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            width: auto;
+            flex: 1;
+            min-width: 100px;
+            max-width: 90%; /* 限制输入框最大宽度 */
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-window" id="chat-window">
+        <!-- 消息内容将显示在这里 -->
+    </div>
+    <div class="input-container">
+        <input type="text" id="message-input" placeholder="输入消息..." oninput="adjustInputWidth()">
+        <button onclick="sendMessage()">发送</button>
+    </div>
+</div>
+
+<script>
+    const chatWindow = document.getElementById('chat-window');
+    const messageInput = document.getElementById('message-input');
+    const apiUrl = 'https://your-api-url.com/send-message';
+
+    function adjustInputWidth() {
+        messageInput.style.width = 'auto';
+        messageInput.style.width = messageInput.scrollWidth + 'px';
+    }
+
+    async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        appendMessage(message, 'user');
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                appendMessage(data.reply, 'bot');
+            } else {
+                appendMessage('发送失败，请稍后重试。', 'bot');
+            }
+        } catch (error) {
+            console.error('发送消息时出错:', error);
+            appendMessage('发送失败，请检查网络连接。', 'bot');
+        }
+
+        messageInput.value = '';
+        adjustInputWidth();
+    }
+    function appendMessage(text, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender);
+        messageElement.textContent = text;
+        chatWindow.appendChild(messageElement);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+</script>
+</body>
+</html>
